@@ -1,20 +1,25 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+import express from 'express'
+import cors from 'cors'
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const PORT = 9898
+const app = express()
 
-var app = express();
+// middlewares anlegen
+app.use(cors())
+app.use(express.json())
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+const trucks = []
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// routen anlegen
+app.post('/api/trucks', (req, res) => {
+  const truck = req.body
+  console.log(truck)
+  trucks.push(truck)
+  res.end()
+})
 
-module.exports = app;
+app.get('/api/trucks', (_, res) => {
+  res.json(trucks)
+})
+
+app.listen(PORT, () => console.log("I'm on:", PORT))
